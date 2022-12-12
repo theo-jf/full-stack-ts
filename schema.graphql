@@ -1,5 +1,4 @@
-# schema
-
+# schema.graphql
 type Query {
   currentUser: User!
   suggestions: [Suggestion!]!
