@@ -20,21 +20,6 @@ import {
 import { GET_TIMELINE_TWEETS } from "./Timeline"
 import { GET_CURRENT_USER } from "./App"
 
-export const CREATE_FAVORITE = gql`
-  mutation CreateFavorite($favorite: FavoriteInput!) {
-    createFavorite(favorite: $favorite) {
-      id
-    }
-  }
-`
-export const DELETE_FAVORITE = gql`
-  mutation DeleteFavorite($favorite: FavoriteInput!) {
-    deleteFavorite(favorite: $favorite) {
-      id
-    }
-  }
-`
-
 export interface TweetProps {
   currentUserId: string;
   tweet: {
@@ -53,6 +38,21 @@ export interface TweetProps {
   };
 }
 
+export const CREATE_FAVORITE = gql`
+  mutation CreateFavorite($favorite: FavoriteInput!) {
+    createFavorite(favorite: $favorite) {
+      id
+    }
+  }
+`
+export const DELETE_FAVORITE = gql`
+  mutation DeleteFavorite($favorite: FavoriteInput!) {
+    deleteFavorite(favorite: $favorite) {
+      id
+    }
+  }
+`
+
 const Tweet: React.FC<TweetProps> = ({ tweet, currentUserId }) => {
   const {
     id,
@@ -64,47 +64,54 @@ const Tweet: React.FC<TweetProps> = ({ tweet, currentUserId }) => {
     isFavorited,
     author: { name, handle, avatarUrl },
   } = tweet;
-  const handleFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (
-    _evt
-  ) => {
-    if (isFavorited)
-    deleteFavorite().catch((err) =>
-      console.error("error while deleting favorite", err)
-    )
-  else
-    createFavorite().catch((err) =>
-      console.error("error while creating favorite", err)
-    )
-  };
-
   const [createFavorite, { error: createFavoriteError }] =
     useCreateFavoriteMutation({
       variables: {
         favorite: { tweetId: id, userId: currentUserId },
       },
       refetchQueries: [GET_TIMELINE_TWEETS, GET_CURRENT_USER],
-    })
+  });
+
   const [deleteFavorite, { error: deleteFavoriteError }] =
     useDeleteFavoriteMutation({
       variables: {
         favorite: { tweetId: id, userId: currentUserId },
       },
       refetchQueries: [GET_TIMELINE_TWEETS, GET_CURRENT_USER],
-    })
-    if (createFavoriteError) {
-      return (
-        <p>
-          Error creating favorite: {createFavoriteError.message}
-        </p>
+  });
+  const handleFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (
+    _evt
+  ) => {
+    if (isFavorited)
+      deleteFavorite().catch((err) =>
+        console.error("error while deleting favorite", err)
       )
-    }
-    if (deleteFavoriteError) {
-      return (
-        <p>
-          Error deleting favorite: {deleteFavoriteError.message}
-        </p>
+    else
+      createFavorite()
+        .then((res) => 
+          console.log(res)
+        )
+        .catch((err) =>
+        console.error("error while creating favorite", err)
       )
-    }
+  };
+
+
+  if (createFavoriteError) {
+    return (
+      <p>
+        Error creating favorite: {createFavoriteError.message}
+      </p>
+    )
+  }
+  
+  if (deleteFavoriteError) {
+    return (
+      <p>
+        Error deleting favorite: {deleteFavoriteError.message}
+      </p>
+    )
+  }
 
   return (
     <div className="tweet">

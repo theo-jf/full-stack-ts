@@ -29,6 +29,12 @@ export type FavoriteInput = {
   userId: Scalars['String'];
 };
 
+export type HashtagTrend = {
+  __typename?: 'HashtagTrend';
+  hashtag: Scalars['String'];
+  tweetCount: Scalars['Int'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createFavorite: Favorite;
@@ -56,6 +62,7 @@ export type Query = {
   __typename?: 'Query';
   currentUser: User;
   suggestions: Array<Suggestion>;
+  trends: Array<Trend>;
   tweets: Array<Tweet>;
 };
 
@@ -66,6 +73,22 @@ export type Suggestion = {
   name: Scalars['String'];
   reason: Scalars['String'];
 };
+
+export type TopicTrend = {
+  __typename?: 'TopicTrend';
+  quote?: Maybe<TopicTrendQuote>;
+  topic: Scalars['String'];
+  tweetCount: Scalars['Int'];
+};
+
+export type TopicTrendQuote = {
+  __typename?: 'TopicTrendQuote';
+  description: Scalars['String'];
+  imageUrl: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type Trend = HashtagTrend | TopicTrend;
 
 export type Tweet = {
   __typename?: 'Tweet';
