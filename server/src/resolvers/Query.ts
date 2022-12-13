@@ -1,5 +1,6 @@
 import { QueryResolvers } from "../resolvers-types.generated"
 import { TwitterResolverContext } from "resolvers" 
+import { tweetTransform } from "../transforms"
 
 const queryTwitterResolvers: QueryResolvers<TwitterResolverContext> = {
   currentUser: (_, __, { db }) => {
@@ -10,8 +11,21 @@ const queryTwitterResolvers: QueryResolvers<TwitterResolverContext> = {
       );
     return firstUser;
   },
-    suggestions: (_, __, { db }) => {
-      return db.getAllSuggestions();
-    },
-  }
+  suggestions: (_, __, { db }) => {
+    return db.getAllSuggestions();
+  },
+  tweets: (_, __, { db, dbTweetToFavoriteCountMap, dbUserCache, dbTweetCache }) => {
+    db.getAllUsers().forEach((user) => {
+      dbUserCache[user.id] = user;
+    });
+    db.getAllFavorites().forEach((favorite) => {
+      const count = dbTweetToFavoriteCountMap[favorite.tweetId] || 0;
+      dbTweetToFavoriteCountMap[favorite.tweetId] = count + 1;
+    });
+    return db.getAllTweets().map((t) => {
+      dbTweetCache[t.id] = t;
+      return tweetTransform(t);
+    });
+  },
+}
   export default queryTwitterResolvers

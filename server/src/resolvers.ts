@@ -1,23 +1,30 @@
-// import queryTwitterResolvers from "./resolvers/Query"
-import Db from "./db"
+import queryTwitterResolvers from "./resolvers/Query"
+import tweetTwitterResolver from './resolvers/Tweet';
+import userTwitterResolver from './resolvers/User';
+import Db, { DbTweet, DbUser } from "./db"
 import { Resolvers } from "./resolvers-types.generated"
-import Query from "./resolvers/Query"
-
-// export default function createResolvers(): Resolvers{
-
-//     return  {
-//         const resolvers: Resolvers<TwitterResolverContext> = {
-            
-//         }
-//     }
-// }
 
 export interface TwitterResolverContext {
     db: Db
+    dbTweetCache: Record<string, DbTweet>
+    dbUserCache: Record<string, DbUser>
+    dbTweetToFavoriteCountMap: Record<string, number>
 }
 
+// export function createResolvers(): Resolvers<TwitterResolverContext> {
+//     const resolvers = {
+//         Query: queryTwitterResolvers,
+//         Tweet: tweetTwitterResolver,
+//         User: userTwitterResolver,
+//     };
+//     return resolvers;
+//   }
+
+
 const resolvers: Resolvers<TwitterResolverContext> = {
-    Query
+    Query: queryTwitterResolvers,
+    Tweet: tweetTwitterResolver,
+    User: userTwitterResolver,
 };
     
 export default resolvers;
