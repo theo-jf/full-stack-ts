@@ -13,6 +13,7 @@ type User {
   createdAt: String!
   updatedAt: String!
   stats: UserStats
+  favorites: [Favorite!]
 }
 type Suggestion {
   name: String!
@@ -40,5 +41,18 @@ type TweetStats {
 }
 type Mutation {
   createTweet(userId: String!, body: String!): Tweet!
+  createFavorite(favorite: FavoriteInput!): Favorite!
+  deleteFavorite(favorite: FavoriteInput!): Favorite!
+}
+type Favorite {
+  id: String!
+  tweet: Tweet!
+  user: User!
+  createdAt: String!
+  updatedAt: String!
+}
+input FavoriteInput {
+  userId: String!
+  tweetId: String!
 }
 

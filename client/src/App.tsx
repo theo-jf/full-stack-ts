@@ -66,6 +66,11 @@ export const GET_CURRENT_USER = gql`
         followingCount
         followerCount
       }
+      favorites {
+        tweet {
+          id
+        }
+      }
     }
     suggestions {
       name
@@ -90,7 +95,7 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <LeftSidebar currentUser={{...CURRENT_USER, ...currentUser}} />
+      <LeftSidebar currentUser={currentUser} />
       <Header currentUser={currentUser} />
 
       <div id="container" className="wrapper nav-closed">
