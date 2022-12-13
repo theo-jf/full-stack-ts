@@ -1,6 +1,7 @@
 import queryTwitterResolvers from "./resolvers/Query"
 import tweetTwitterResolver from './resolvers/Tweet';
 import userTwitterResolver from './resolvers/User';
+import mutationTwitterResolver from './resolvers/Mutation';
 import Db, { DbTweet, DbUser } from "./db"
 import { Resolvers } from "./resolvers-types.generated"
 
@@ -25,6 +26,7 @@ const resolvers: Resolvers<TwitterResolverContext> = {
     Query: queryTwitterResolvers,
     Tweet: tweetTwitterResolver,
     User: userTwitterResolver,
+    Mutation: mutationTwitterResolver,
 };
     
 export default resolvers;
